@@ -39,7 +39,7 @@ Telephone Telephone::input()
 	return t;
 }
 
-void Telephone::print()
+void Telephone::print(Telephone phone)
 {
 	cout << "    FIO:" << this->FIO;
 	cout << "      Home Phone:" << this->phoneHome;
@@ -50,22 +50,13 @@ void Telephone::print()
 
 
 
-//Worker* addWorker(Worker workers[], int& last)
-//{
-//	Worker* worker = new Worker;
-//	inputNewWorker(worker);
-//	workers[last] = *worker;
-//	last++;
-//	return worker;
-//}
-
-//void printAllWorkers(Worker workers[], int N) {
-//	cout << endl << "Workers list:" << endl;
-//	for (int i = 0; i < N; i++) {
-//		cout << "  N:          " << i + 1 << endl;
-//		printWorker(workers[i]);
-//	}
-//}
+void Telephone::printAllContacts(Telephone phone[], int size) {
+	cout << endl << "Contacts list:" << endl;
+	for (int i = 0; i < size; i++) {
+		cout << "  N:          " << i + 1 << endl;
+		print(phone[i]);
+	}
+}
 
 
 void Telephone::writeToFile(Telephone phone[], int size)
@@ -93,31 +84,69 @@ char* copyLine(string line) {
 }
 
 void Telephone::readFromFile(Telephone phone[], int &size) {
-	//ifstream file("telephone_data.txt");
+	ifstream file("telephone_data.txt");
 
-	//if (file.is_open()) {
-	//	string line; 
-	//	fgets(line, MAX_LEN, stdin);
-	//	int count = atoi(line);
+	if (file.is_open()) {
 
-	//	for (int i = 0; i < count; i++) {
-	//		Telephone* t = new Telephone;
-	//		fgets(line, MAX_LEN, stdin);
-	//		t->FIO = copyLine(line);
-	//		fgets(line, MAX_LEN, stdin);
-	//		t->phoneHome = copyLine(line);
-	//		fgets(line, MAX_LEN, stdin);
-	//		t->phoneMobile = copyLine(line);
-	//		fgets(line, MAX_LEN, stdin);
-	//		t->phoneWork = copyLine(line);
-	//		fgets(line, MAX_LEN, stdin);
-	//		t->comments = copyLine(line);
-	//		phone[i] = *t;
-	//	}
-	//	size = count;
-	//	file.close();
-	//}
-	//else {
-	//	cout << "Oops!" << std::endl;
-	//}
+		string line;
+		getline(file, line);
+		int count = stoi(line);
+
+		for (int i = 0; i < count; i++) {
+			Telephone* t = new Telephone;
+			getline(file, line);
+			t->FIO = copyLine(line);
+			getline(file, line);
+			t->phoneHome = copyLine(line);
+			getline(file, line);
+			t->phoneMobile = copyLine(line);
+			getline(file, line);
+			t->phoneWork = copyLine(line);
+			getline(file, line);
+			t->comments = copyLine(line);
+			phone[i] = *t;
+		}
+		size = count;
+		file.close();
+	}
+	else {
+		cout << "Oops!" << std::endl;
+	}
 }
+
+void Telephone::deleteContact(Telephone phone[], int& size, int userNumber)
+
+{
+	int index = userNumber - 1;
+	for (int i = index; i < size - 1; i++) {
+		phone[i] = phone[i + 1];
+	}
+	size--;
+}
+
+
+int Telephone::searchByFIO(Telephone phone[], int size, string nameKey) {
+	for (int i = 0; i < size; i++) {
+		if (phone[i].FIO.find(nameKey) !=std::string::npos) 
+	{
+			return i;
+	}
+	}
+	return -1;
+}
+
+
+void Telephone::printByFIO(Telephone phone[], int& size) {
+	string nameKey;
+	cout << "Enter the last name to find:";
+	getline(cin >> ws, nameKey,
+		'\n'); 
+	int index = searchByFIO(phone, size, nameKey);
+	if (index >= 0) {
+		print(phone[index]);
+	}
+	else {
+		cout << "No such worker found" << endl;
+	}
+}
+
