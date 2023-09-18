@@ -128,9 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PhoneBook.cpp" />
     <ClCompile Include="Telephone.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PhoneBook.h" />
     <ClInclude Include="Telephone.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

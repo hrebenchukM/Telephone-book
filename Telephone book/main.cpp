@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Telephone.h"
+#include "PhoneBook.h"
 
 using namespace std;
 
@@ -26,48 +27,84 @@ int menu() {
 
 
 
-void doMenu(Telephone phone[], int& size) {
+//void doMenu(Contact phones[], int& size) {
+//    int choice;
+//    int userNumber;
+//    int userAnswer;
+//
+//    do {
+//        choice = menu();
+//        switch (choice) {
+//        case 1:
+//            Contact::addContact(phones, size);
+//            break;
+//        case 2:
+//            Contact::printAllContacts(phones, size);
+//            break;
+//        case 3:
+//            Contact::writeToFile(phones, size);
+//            break;
+//        case 4:
+//            Contact::readFromFile(phones, size);
+//            break;
+//        case 5:
+//            Contact::printByFIO(phones, size);
+//            break;
+//
+//        case 6:
+//
+//            do {
+//                cout << "Iput number of worker to delete";
+//                cin >> userNumber;
+//            } while (userNumber <= 0);
+//
+//            (phones[userNumber - 1]).print();
+//            cout << "Are you sure that you want to delete this worker?(1=Yes,0=No):" << endl;
+//            cin >> userAnswer;
+//            if (userAnswer == 1)
+//            {
+//                Contact::deleteContact(phones,size, userNumber);
+//            }
+//            else {
+//                cout << "Okay (-_-)" << endl;
+//            }
+//
+//            break;
+//        case 7:
+//            cout << "Bye!" << endl;
+//            break;
+//        }
+//    } while (choice != 9);
+//}
+
+
+void doMenu(PhoneBook phoneBook) {
     int choice;
-    int userNumber;
-    int userAnswer;
+    
 
     do {
         choice = menu();
         switch (choice) {
         case 1:
-            Telephone t = Telephone::input();
+            phoneBook.addContact();
             break;
         case 2:
-            Telephone::printAllContacts(phone, size);
+            phoneBook.printAllContacts();
             break;
         case 3:
-            Telephone::writeToFile(phone, 10);
+            phoneBook.writeToFile();
             break;
         case 4:
-            Telephone::readFromFile(phone, size);
+            phoneBook.readFromFile();
             break;
         case 5:
-            Telephone::printByFIO(phone, size);
+            phoneBook.printByFIO();
             break;
 
         case 6:
-
-            do {
-                cout << "Iput number of worker to delete";
-                cin >> userNumber;
-            } while (userNumber <= 0);
-
-            print(phone[userNumber - 1]);
-            cout << "Are you sure that you want to delete this worker?(1=Yes,0=No):" << endl;
-            cin >> userAnswer;
-            if (userAnswer == 1)
-            {
-                Telephone::deleteContact(phone,size, userNumber);
-            }
-            else {
-                cout << "Okay (-_-)" << endl;
-            }
-
+            phoneBook.deleteContact();
+           // phoneBook.doDelete();
+            
             break;
         case 7:
             cout << "Bye!" << endl;
@@ -78,28 +115,27 @@ void doMenu(Telephone phone[], int& size) {
 
 
 
-
-
 int main()
 {
    
 
 
-	Telephone phone[10];
-	Telephone t = Telephone::input();
-	   phone[0] = t;
-	 Telephone::writeToFile(phone,10);
-	
-	int size = 0;
-     Telephone::readFromFile(phone, size);
-	 t.printAllContacts( phone,size);
+	//Telephone phone[10];
+	//Telephone t = Telephone::input();
+	 //  phone[0] = t;
+	 //Telephone::writeToFile(phone,10);
+	//
+	///int size = 0;
+    // Telephone::readFromFile(phone, size);
+	 //t.printAllContacts( phone,size);
+
+    //const int N = 10;
+    //int size = 0;
+    //Contact phones[N];
+    
+    PhoneBook phoneBook = PhoneBook();
+    doMenu(phoneBook);
 
 
-
-
-
-	//string s = "Bla bla";
-	//const char* ss = copyLine(s);
-	//cout << ss;
 
 }

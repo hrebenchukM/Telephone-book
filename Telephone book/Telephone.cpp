@@ -4,8 +4,16 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#define MAX_LEN 100
+#include "PhoneBook.h"
 using namespace std;
+
+/*
+char* copyLine(string line) {
+	char* result = new char[line.length() + 1];
+	strcpy_s(result, line.length() + 1, line.c_str());
+	return result;
+} */
+
 
 char* check(string title, bool checkEmpty) {
 	string buff = "";
@@ -19,7 +27,7 @@ char* check(string title, bool checkEmpty) {
 		else
 			break;
 	}
-	return copyLine(buff);
+	return PhoneBook::copyLine(buff);
 }
 
 char* check(string title) {
@@ -28,9 +36,9 @@ char* check(string title) {
 
 
 
-Telephone Telephone::input()
+Contact Contact::input()
 {
-	Telephone t = Telephone();
+	Contact t = Contact();
 	t.FIO = check("first name");
 	t.phoneHome = check("Home phone");
 	t.phoneMobile = check("Mobile phone");
@@ -38,28 +46,37 @@ Telephone Telephone::input()
 	t.comments = check("Comments", false);
 	return t;
 }
-
-void Telephone::print(Telephone phone)
+void Contact::print()
 {
-	cout << "    FIO:" << this->FIO;
-	cout << "      Home Phone:" << this->phoneHome;
-	cout << "      Work Phone:" << this->phoneWork;
-	cout << "      Mobile Phone:" << this->phoneMobile;
-	cout << "      Comments:" << this->comments;
+	cout << "    FIO:" << this->FIO << endl;
+	cout << "      Home Phone:" << this->phoneHome << endl;
+	cout << "      Work Phone:" << this->phoneWork << endl;
+	cout << "      Mobile Phone:" << this->phoneMobile << endl;
+	cout << "      Comments:" << this->comments << endl;
 }
+/*
+Contact Contact::addContact(Contact contacts[], int& size) {
+	Contact phone = phone.input();
+	contacts[size] = phone;
+	phone.print();
+	size++;
+	return phone;
+}*/
 
 
 
-void Telephone::printAllContacts(Telephone phone[], int size) {
+
+/*
+void Contact::printAllContacts(Contact contacts[], int size) {
 	cout << endl << "Contacts list:" << endl;
 	for (int i = 0; i < size; i++) {
 		cout << "  N:          " << i + 1 << endl;
-		print(phone[i]);
+		contacts[i].print();
 	}
-}
+}*/
 
-
-void Telephone::writeToFile(Telephone phone[], int size)
+/*
+void Contact::writeToFile(Contact contacts[], int size)
 {
 	ofstream outputFile("telephone_data.txt"); 
 	if (!outputFile) 
@@ -67,23 +84,19 @@ void Telephone::writeToFile(Telephone phone[], int size)
 
 	outputFile << size << endl;
 	for (int i = 0; i < size; i++) {
-		outputFile << phone[i].FIO << endl;
-		outputFile << phone[i].phoneHome << endl;
-		outputFile << phone[i].phoneMobile << endl;
-		outputFile << phone[i].phoneWork << endl;
-		outputFile << phone[i].comments << endl;
+		outputFile << contacts[i].FIO << endl;
+		outputFile << contacts[i].phoneHome << endl;
+		outputFile << contacts[i].phoneMobile << endl;
+		outputFile << contacts[i].phoneWork << endl;
+		outputFile << contacts[i].comments << endl;
 	}
 	cout << "Success!" << endl;
 }
 
+*/
 
-char* copyLine(string line) {
-	char* result = new char[line.length() + 1];
-	strcpy_s(result, line.length() + 1, line.c_str());
-	return result;
-}
-
-void Telephone::readFromFile(Telephone phone[], int &size) {
+/*
+void Contact::readFromFile(Contact contacts[], int &size) {
 	ifstream file("telephone_data.txt");
 
 	if (file.is_open()) {
@@ -93,7 +106,7 @@ void Telephone::readFromFile(Telephone phone[], int &size) {
 		int count = stoi(line);
 
 		for (int i = 0; i < count; i++) {
-			Telephone* t = new Telephone;
+			Contact* t = new Contact;
 			getline(file, line);
 			t->FIO = copyLine(line);
 			getline(file, line);
@@ -104,7 +117,7 @@ void Telephone::readFromFile(Telephone phone[], int &size) {
 			t->phoneWork = copyLine(line);
 			getline(file, line);
 			t->comments = copyLine(line);
-			phone[i] = *t;
+			contacts[i] = *t;
 		}
 		size = count;
 		file.close();
@@ -112,22 +125,47 @@ void Telephone::readFromFile(Telephone phone[], int &size) {
 	else {
 		cout << "Oops!" << std::endl;
 	}
-}
-
-void Telephone::deleteContact(Telephone phone[], int& size, int userNumber)
+}*/
+/*
+void Contact::deleteContact(Contact contacts[], int& size, int userNumber)
 
 {
 	int index = userNumber - 1;
 	for (int i = index; i < size - 1; i++) {
-		phone[i] = phone[i + 1];
+		contacts[i] = contacts[i + 1];
 	}
 	size--;
+
+}*/
+/*void Contact::doDelete(Contact contacts[], int& size)
+{   
+	int userNumber;
+	int userAnswer;
+	do {
+		
+		     cout << "Input number of worker to delete";
+		     cin >> userNumber;
+		 } while (userNumber <= 0);
+
+		 (contacts[userNumber - 1]).print();
+		 cout << "are you sure that you want to delete this worker?(1=yes,0=no):" << endl;
+		 cin >> userAnswer;
+		 if (userAnswer == 1)
+		 {
+		     deleteContact(contacts, size, userNumber);
+		 }
+		 else {
+		     cout << "okay (-_-)" << endl;
+		 }
 }
 
+*/
 
-int Telephone::searchByFIO(Telephone phone[], int size, string nameKey) {
+
+/*int Contact::searchByFIO(Contact contacts[], int size, string nameKey) {
 	for (int i = 0; i < size; i++) {
-		if (phone[i].FIO.find(nameKey) !=std::string::npos) 
+
+		if (string(contacts[i].FIO).find(nameKey) !=std::string::npos) 
 	{
 			return i;
 	}
@@ -136,17 +174,17 @@ int Telephone::searchByFIO(Telephone phone[], int size, string nameKey) {
 }
 
 
-void Telephone::printByFIO(Telephone phone[], int& size) {
+void Contact::printByFIO(Contact contacts[], int& size) {
 	string nameKey;
 	cout << "Enter the last name to find:";
 	getline(cin >> ws, nameKey,
 		'\n'); 
-	int index = searchByFIO(phone, size, nameKey);
+	int index = searchByFIO(contacts, size, nameKey);
 	if (index >= 0) {
-		print(phone[index]);
+		contacts[index].print();
 	}
 	else {
 		cout << "No such worker found" << endl;
 	}
 }
-
+*/
