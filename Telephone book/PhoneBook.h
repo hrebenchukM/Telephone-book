@@ -6,10 +6,10 @@ using namespace std;
 
 class PhoneBook {
 private:
-	Contact contacts[10];
+	Contact* contacts[10];
 	int size = 0;
 public:
-
+	~PhoneBook();
 	static char* copyLine(string line);
 	void writeToFile();
 	void readFromFile();
@@ -18,6 +18,6 @@ public:
 	int searchByFIO(string nameKey);
 	void printAllContacts();
 	//void doDelete();
-	Contact addContact();
+	void addContact();
 };
 

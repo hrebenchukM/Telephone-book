@@ -12,14 +12,14 @@ private:
 	char* phoneWork;
 	char* phoneMobile;
 	char* comments;
-	bool shouldDeleteMemory;
+	//bool shouldDeleteMemory;
 
 
 public:
-	static Contact input();
+	static Contact input2();
 	void print();
 	//static char* copyLine(string);
-
+	void input();
 	
 	char* getFIO() {
 		return FIO;
@@ -42,7 +42,9 @@ public:
 	}
 
 	void setFIO(char* v) {
-		FIO = v;
+		
+		FIO = new char[strlen(v) + 1];
+		strcpy_s(FIO, strlen(v) + 1, v);
 	}
 
 	void setPhoneHome(char* v) {
@@ -58,13 +60,19 @@ public:
 	}
 	
 	void setComments(char* v) {
-		comments = v;
+	
+		comments = new char[strlen(v) + 1];
+		strcpy_s(comments, strlen(v) + 1, v);
 	}
 
 
-	void setShouldDelete(bool should) {
+	/*void setShouldDelete(bool should) {
 		shouldDeleteMemory = should;
-	}
+	}*/
+
+	/*bool getShouldDelete() {
+		 return shouldDeleteMemory;
+	}*/
 
 
 	Contact()
@@ -76,36 +84,34 @@ public:
 			phoneMobile = nullptr;
 			comments = nullptr;
 
-		shouldDeleteMemory = false; 
+		//shouldDeleteMemory = false; 
 		
 	}
 
-	
+
 	~Contact()
 	{
-		if (shouldDeleteMemory)
+		cout << "Total Destruction!!!";
+
+		if (FIO != nullptr)
 		{
-			delete[] FIO;
-			delete[] phoneHome;
-			delete[] phoneWork;
-			delete[] phoneMobile;
-			delete[] comments;
+			cout << "Delete -> " << FIO << "... \n";
+			delete[]FIO;
 		}
+
+		delete[] phoneHome;
+		delete[] phoneWork;
+		delete[] phoneMobile;
+		if (comments != nullptr)
+		{
+			cout << "Delete -> " << comments << "... \n";
+			delete[]comments;
+		}
+
+
 	}
 
-	//~Contact();
-
 	
-	//static void writeToFile(Contact contacts[], int size);
-	//static void readFromFile(Contact contacts[], int& size);
-	
-	//static void printByFIO(Contact contacts[], int& size);
-	//static int searchByFIO(Contact contacts[], int size, string nameKey);
-	//static void printAllContacts(Contact contacts[], int size);
-	//static Contact addContact(Contact contacts[], int& size);
-
-	//static void deleteContact(Contact contacts[], int& size, int userNumber);
-	//static void doDelete(Contact contacts[], int& size);
 };
 
 

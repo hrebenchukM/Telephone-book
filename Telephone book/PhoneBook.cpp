@@ -8,13 +8,21 @@
 
 using namespace std;
 
-Contact PhoneBook::addContact() {
-	Contact phone = phone.input();
+void PhoneBook::addContact() {// 
+	// Создание контакта в куче
+	// Если бы контакт создавался бы в стеке
+	// И запсывался бы в массив контактов
+	// то при добавлении происходило бы копирование двух объектов класса Contact
+	// тот объект с которого бы копировались данные удалился вызвал бы деструктор
+	// и поля которые являлилсь указателями на учатски в куче удалили бы сами учатски в деструктор
+	// Результат данной ситуации: новый объект  класса Contact в массиве в поля получает указатели на не существующий уже участок в куче, и при выводе всех контактов показывался мусор
+	// Решение сделать массив не из объектов Contact а из указателей Contact, которые будут указывать на объект класса Contact в куче
+	// и тогда будут копироваться не объекты а указатели
+	Contact* phone=new Contact();
+	phone->input();
 	contacts[size] = phone;
-	//contacts[size] = new Contact();
-	phone.print();
+	phone->print();
 	size++;
-	return phone;
 }
 
 
@@ -22,10 +30,17 @@ void PhoneBook::printAllContacts() {
 	cout << endl << "Contacts list:" << endl;
 	for (int i = 0; i < size; i++) {
 		cout << "  N:          " << i + 1 << endl;
-		contacts[i].print();
+		contacts[i]->print();
 	}
 }
 
+
+PhoneBook::~PhoneBook()
+{
+	for (int i = 0; i < size; i++) {
+		delete contacts[i];
+	}
+}
 
 char* PhoneBook::copyLine(string line) {
 	char* result = new char[line.length() + 1];
@@ -48,11 +63,11 @@ void PhoneBook::writeToFile()
 
 		outputFile << size << endl;
 		for (int i = 0; i < size; i++) {
-			outputFile << contacts[i].getFIO() << endl;
-			outputFile << contacts[i].getPhoneHome() << endl;
-			outputFile << contacts[i].getPhoneMobile() << endl;
-			outputFile << contacts[i].getPhoneWork() << endl;
-			outputFile << contacts[i].getComments() << endl;
+			outputFile << contacts[i]->getFIO() << endl;
+			outputFile << contacts[i]->getPhoneHome() << endl;
+			outputFile << contacts[i]->getPhoneMobile() << endl;
+			outputFile << contacts[i]->getPhoneWork() << endl;
+			outputFile << contacts[i]->getComments() << endl;
 		}
 		cout << "Success!" << endl;
 	}
@@ -67,32 +82,33 @@ void PhoneBook::readFromFile() {
 		getline(file, line);
 		int count = stoi(line);
 
+		Contact* t;
 		for (int i = 0; i < count; i++) {
-			Contact t = Contact();
+			t = new Contact();
 
 			getline(file, line);
 			if (!line.empty()) {
-				t.setFIO(copyLine(line));
+				t->setFIO(copyLine(line));
 			}
 
 			getline(file, line);
 			if (!line.empty()) {
-				t.setPhoneHome(copyLine(line));
+				t->setPhoneHome(copyLine(line));
 			}
 
 			getline(file, line);
 			if (!line.empty()) {
-				t.setPhoneMobile(copyLine(line));
+				t->setPhoneMobile(copyLine(line));
 			}
 
 			getline(file, line);
 			if (!line.empty()) {
-				t.setPhoneWork(copyLine(line));
+				t->setPhoneWork(copyLine(line));
 			}
 
 			getline(file, line);
 			if (!line.empty()) {
-				t.setComments(copyLine(line));
+				t->setComments(copyLine(line));
 			}
 
 			contacts[i] = t;
@@ -107,81 +123,12 @@ void PhoneBook::readFromFile() {
 
 
 
-/*
-void PhoneBook::readFromFile() {
-	ifstream file("telephone_data.txt");
 
-	if (file.is_open()) {
-
-		string line;
-		getline(file, line);
-		int count = stoi(line);
-
-		for (int i = 0; i < count; i++) {
-			Contact t = Contact();
-			getline(file, line);
-			t.setFIO(copyLine(line));
-			getline(file, line);
-			t.setPhoneHome(copyLine(line));
-			getline(file, line);
-			t.setPhoneMobile(copyLine(line));
-			getline(file, line);
-			t.setPhoneWork(copyLine(line));
-			getline(file, line);
-			t.setComments(copyLine(line));
-			contacts[i] = t;
-		}
-		size = count;
-		file.close();
-	}
-	else {
-		cout << "Oops!" << std::endl;
-	}
-}
-*/
-/*
-void PhoneBook::deleteContact(int userNumber)
-
-{
-	
-	int index = userNumber - 1;
-	//delete contacts[index];
-	for (int i = index; i < size - 1; i++) {
-		contacts[i] = contacts[i + 1];
-	}
-	size--;
-}
-
- 
-void PhoneBook::doDelete()
-{
-	int userNumber;
-	int userAnswer;
-	do {
-			
-		cout << "Input number of worker to delete";
-		cin >> userNumber;
-	} while (userNumber <= 0);
-
-	(contacts[userNumber - 1]).print();
-	cout << "are you sure that you want to delete this worker?(1=yes,0=no):" << endl;
-	cin >> userAnswer;
-	if (userAnswer == 1)
-	{
-		deleteContact( userNumber);
-	}
-	else {
-		cout << "okay (-_-)" << endl;
-	}
-}
-
-*/
 
 void PhoneBook::deleteContact() {
 	int userNumber;
 	int userAnswer;
 	
-	//Contact::getShouldDeleteMemory;
 	
 	do {
 
@@ -191,17 +138,24 @@ void PhoneBook::deleteContact() {
 
 	int index = userNumber - 1;
 	if (index >= 0 && index < size) {
-		contacts[index].print(); // Вывести информацию о контакте
+		
+		contacts[index]->print(); // Вывести информацию о контакте
 		cout << "Do you want to delete this contact? (1=yes, 0=no): ";
 		int userAnswer;
 		cin >> userAnswer;
 		if (userAnswer == 1) {
-			//delete contacts[index]; // Удалить контакт, вызвав его деструктор
-			contacts[index].setShouldDelete(true);
-			for (int i = index; i < size - 1; i++) {
+			
+			Contact* deleteContact = contacts[index];
+			size--;
+			for (int i = index; i < size; i++) {
 				contacts[i] = contacts[i + 1];
 			}
-			size--;
+			delete deleteContact;
+			////contacts[index].setShouldDelete(true);
+			//
+			//Contact c = contacts[index];
+			//c.~Contact();
+			
 		}
 		else {
 			cout << "Contact was not deleted." << endl;
@@ -213,7 +167,7 @@ void PhoneBook::deleteContact() {
 int PhoneBook::searchByFIO(string nameKey) {
 	for (int i = 0; i < size; i++) {
 
-		if (string(contacts[i].getFIO()).find(nameKey) != std::string::npos)
+		if (string(contacts[i]->getFIO()).find(nameKey) != std::string::npos)
 		{
 			return i;
 		}
@@ -229,7 +183,7 @@ void PhoneBook::printByFIO() {
 		'\n');
 	int index = searchByFIO(nameKey);
 	if (index >= 0) {
-		contacts[index].print();
+		contacts[index]->print();
 	}
 	else {
 		cout << "No such worker found" << endl;
